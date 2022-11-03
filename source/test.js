@@ -64,3 +64,11 @@ console.log(
         new math.Plane( [ 0, - 2, 0 ], [ 0, 10, 0.00002 ] ),
     ),
 );
+
+// calculateIntersectionOfLineAndPlane
+console.log(
+    math.calculateIntersectionOfLineAndPlane(
+        new math.Line( [ 1, 1, 1 ], [ 2, 2, 2 ] ),
+        new math.Plane( [ 0, 0, 0 ], [ 0, 1, 0 ] ),
+    )
+);

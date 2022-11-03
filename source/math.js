@@ -449,6 +449,53 @@ export function calculateDistanceBetweenPlaneAndPlane ( plane_a, plane_b ) {
 }
 
 /**
+ * 计算并返回直线和平面的交点。
+ * @param { Object } line - 直线，是Line类的实例。
+ * @param { Object } plane - 平面，是Plane类的实例。
+ * @returns { Object | undefined } - 如果直线和平面会相交，那么就会返回交点，交点是Point类的实例。如果平面和直线不会相交，那么就会返回undefined。
+ * @example
+ * const l_1 = new Line( [ 0, 1, 0 ], [ 1, 1, 0 ] );
+ * const l_2 = new Line( [ 0, 1, 0 ], [ 0, 2, 0 ] );
+ * const p = new Plane( [ 0, 0, 0 ], [ 0, 1, 0 ] );
+ * f( l_1, p ); // return undefined
+ * f( l_2, p ); // return point
+ */
+export function calculateIntersectionOfLineAndPlane ( line, plane ) {
+
+    const relation = calculateRelationBetweenLineAndPlane( line, plane );
+
+    /* 平行 */
+    if ( relation === 1 ) return undefined;
+
+    /* 相交 */
+    const point_a = new Point( [ ...line.position ] );                   // line的position点
+    const point_b = calculateProjectionOfPointOnPlane( point_a, plane ); // point_a在plane上的投影点
+
+    const position_a = point_a.position;
+    const position_b = point_b.position;
+
+    if ( isPositionEqual( position_a, position_b ) ) return point_a;
+
+    const vector_ab = calculateVector( position_a, position_b );
+    const vector_ab_norm = calculateNorm( vector_ab );
+    const vector_ac = [ ...line.direction ];                     // line的方向向量
+    const vector_ac_unit = calculateUnitVector( vector_ac );
+
+    const angle = calculateAngleBetweenVectorAndVector( vector_ab, vector_ac );
+    const distance = vector_ab_norm / Math.cos( angle );
+
+    const position_intersection = [
+        position_a[ 0 ] + distance * vector_ac_unit[ 0 ],
+        position_a[ 1 ] + distance * vector_ac_unit[ 1 ],
+        position_a[ 2 ] + distance * vector_ac_unit[ 2 ],
+    ];
+    const point_intersection = new Point( position_intersection );
+
+    return point_intersection;
+
+}
+
+/**
  * 计算并返回点在直线上的投影点。
  * @param { Object } point - 点，是Point类的实例。
  * @param { Object } line - 直线，是Line类的实例。
