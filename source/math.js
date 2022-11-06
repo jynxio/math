@@ -362,9 +362,15 @@ export function calculateDistanceBetweenPointAndPlane ( point, plane ) {
  * 计算并返回直线和直线之间的距离，以及距离线段的两个端点。
  * @param { Object } line_a - 直线a，是Line类的实例。
  * @param { Object } line_b - 直线b，是Line类的实例。
- * @returns { Object } - TODO - 请完成该描述的编写
+ * @returns { Object } - 一个拥有distance、points的普通对象。
  * @exmaple
- * TODO - 请完成该描述的编写
+ * const l_1 = new Line( [ 0, 0, 0 ], [ 1, 0, 0 ] );
+ * const l_2 = new Line( [ 0, 1, 0 ], [ 1, 1, 0 ] );
+ * const l_3 = new Line( [ 0, 0, 0 ], [ 0, 1, 0 ] );
+ * const l_4 = new Line( [ 0, 1, 1 ], [ 0, 1, 0 ] );
+ * f( l_1, l_2 ); // return { distance: 1, points: [ point_start, point_end ] }
+ * f( l_1, l_3 ); // return { distance: 0, points: [ point_start, point_end ] }
+ * f( l_1, l_4 ); // return { distance: 1, points: [ point_start, point_end ] }
  */
 export function calculateDistanceBetweenLineAndLine ( line_a, line_b ) {
 
@@ -386,9 +392,10 @@ export function calculateDistanceBetweenLineAndLine ( line_a, line_b ) {
 
     if ( relation === 2 ) { // 相交
 
-        // TODO - 请完成points的计算
+        const point_start = calculateIntersectionOfLineAndLine( line_a, line_b );
+        const point_end = new Point( point_start.position );
 
-        return { distance: 0, points: [] };
+        return { distance: 0, points: [ point_start, point_end ] };
 
     }
 
