@@ -503,18 +503,40 @@ export function calculateDistanceBetweenPlaneAndPlane ( plane_a, plane_b ) {
  * @param { Object } line_b - 直线b，是Line类的实例。
  * @returns { Object | undefined } - 如果两条直线会相交，那么就会返回交点，交点是Point类的实例。如果两条直线不会相交（异面或平行），那么就会返回undefined。
  * @example
- * 
+ * const l_a = new Line( [ 0, 1, 0 ], [ 1, 0, 0 ] );
+ * const l_b = new Line( [ 1, 0, 0 ], [ 0, 1, 0 ] );
+ * f( l_a, l_b ); // return point
  */
 export function calculateIntersectionOfLineAndLine ( line_a, line_b ) {
 
     const relation = calculateRelationBetweenLineAndLine( line_a, line_b );
 
-    // 异面或平行
+    /* 异面或平行 */
     if ( relation === 0 || relation === 1 ) return undefined;
 
-    // 相交
+    /* 相交 */
+    if ( isPositionEqual( line_a.position, line_b.position ) ) return new Point( line_a.position );
 
-    // TODO
+    const vector_ac = [ ...line_a.direction ];                             // 假设line_a的position为点a，假设line_a和line_b的交点为点c
+    const vector_bc = [ ...line_b.direction ];                             // 假设line_b的position为点b，假设line_a和line_b的交点为点c
+    const vector_ab = calculateVector( line_a.position, line_b.position ); //
+
+    const sin_angle_a = Math.sin( calculateAngleBetweenVectorAndVector( vector_ab, vector_ac ) );
+    const sin_angle_c = Math.sin( calculateAngleBetweenVectorAndVector( vector_ac, vector_bc ) );
+
+    const distance_ab = calculateDistanceBetweenPointAndPoint( new Point( line_a.position ), new Point( line_b.position ) ).distance;
+    const distance_bc = distance_ab * sin_angle_a / sin_angle_c;
+
+    const unit_vector_bc = calculateUnitVector( vector_bc );
+
+    const position_b = [ ...line_b.position ];
+    const position_c = [
+        position_b[ 0 ] + distance_bc * unit_vector_bc[ 0 ],
+        position_b[ 1 ] + distance_bc * unit_vector_bc[ 1 ],
+        position_b[ 2 ] + distance_bc * unit_vector_bc[ 2 ],
+    ];
+
+    return new Point( position_c );
 
 }
 

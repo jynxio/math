@@ -72,3 +72,11 @@ console.log(
         new math.Plane( [ 0, 0, 0 ], [ 0, 1, 0 ] ),
     )
 );
+
+// calculateIntersectionOfLineAndLine
+console.log(
+    math.calculateIntersectionOfLineAndLine(
+        new math.Line( [ - 1, 0, 0 ], [ 0, 2, 0 ] ),
+        new math.Line( [ 3, 0, 0 ], [ 3, 1, 0 ] ),
+    ),
+);
