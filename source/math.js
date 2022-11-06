@@ -2,27 +2,36 @@
 // ======================================================================================================
 /**
  * 点类。
- * @param { number[] } position - 点的坐标，格式为[x, y, z]。
- * @returns { Object } - 点类的实例。
+ * @param { number[] } [ position = [0, 0, 0] ] - （可选）点的坐标，格式为[x, y, z]，默认值为[0, 0, 0]。
+ * @returns { Object } - 点类的实例，拥有position属性，以及setPosition方法。
  * @example
  * new f( [ 0, 0, 0 ] ); // return { position: [ 0, 0, 0 ] }
  */
-export function Point ( position ) {
+export function Point ( position = [ 0, 0, 0 ] ) {
 
     // position属性 - 存储了点的坐标
     this.position = [ ...position ];
+
+    // setPosition方法
+    this.setPosition = position => {
+
+        this.position = [ ...position ];
+
+        return this;
+
+    };
 
 }
 
 /**
  * 直线类。
- * @param { number[] } position_start - 起始点的坐标，格式为[x, y, z]。
- * @param { number[] } position_end - 终止点的坐标，格式为[x, y, z]。
- * @returns { Object } - 线类的实例，拥有positions、direction属性。
+ * @param { number[] } [ position_start = [0, 0, 0] ] - （可选）起始点的坐标，格式为[x, y, z]，默认值为[0, 0, 0]。
+ * @param { number[] } [ position_end = [0, 1, 0] ] - （可选）终止点的坐标，格式为[x, y, z]，默认值为[0, 1, 0]。
+ * @returns { Object } - 线类的实例，拥有position、direction属性，以及setPosition、setDirection方法。
  * @example
  * new f( [ 0, 0, 0 ], [ 2, 0, 0 ] ); // return { position: [ 0, 0, 0 ], direction: [ 1, 0, 0 ] }
  */
-export function Line ( position_start, position_end ) {
+export function Line ( position_start = [ 0, 0, 0 ], position_end = [ 0, 1, 0 ] ) {
 
     // position属性 - 存储了点的坐标
     this.position = [ ...position_start ];
@@ -31,23 +40,59 @@ export function Line ( position_start, position_end ) {
     this.direction = calculateVector( position_start, position_end );
     this.direction = calculateUnitVector( this.direction );
 
+    // setPosition方法
+    this.setPosition = position => {
+
+        this.position = [ ...position ];
+
+        return this;
+
+    };
+
+    // setDirection方法
+    this.setDirection = direction => {
+
+        this.direction = [ ...direction ];
+
+        return this;
+
+    };
+
 }
 
 /**
  * 平面类。
- * @param { number[] } position - 平面上任意一点的坐标，格式为[x, y, z]。
- * @param { number[] } normal_vector - 平面的法向量，格式为[x, y, z]。
- * @returns { Object } - 平面类的实例，拥有position、normalVector属性。
+ * @param { number[] } [ position = [0, 0, 0] ] - 平面上任意一点的坐标，格式为[x, y, z]，默认值为[0, 0, 0]。
+ * @param { number[] } [ normal_vector = [0, 1, 0] ] - 平面的法向量，格式为[x, y, z]，默认值为[0, 1, 0]。
+ * @returns { Object } - 平面类的实例，拥有position、normalVector属性，以及setPosition、setNormalVector方法。
  * @example
  * new f( [ 0, 0, 0 ], [ 0, 2, 0 ] ); // return { position: [ 0, 0, 0 ], normalVector: [ 0, 1, 0 ] }
  */
-export function Plane ( position, normal_vector ) {
+export function Plane ( position = [ 0, 0, 0 ], normal_vector = [ 0, 1, 0 ] ) {
 
     // position属性 - 存储了点的坐标
     this.position = [ ...position ];
 
     // normalVector属性 - 存储了该平面的单位法向量。
     this.normalVector = calculateUnitVector( normal_vector );
+
+    // setPosition方法
+    this.setPosition = position => {
+
+        this.position = [ ...position ];
+
+        return this;
+
+    };
+
+    // setNormalVector方法
+    this.setNormalVector = normal_vector => {
+
+        this.normalVector = [ ...normal_vector ];
+
+        return this;
+
+    };
 
 }
 
@@ -438,13 +483,38 @@ export function calculateDistanceBetweenPlaneAndPlane ( plane_a, plane_b ) {
 
     if ( relation === 2 ) { // plane_a和plane_b相交
 
-        // TODO - 请完成lines的计算
+        const intersection_direction = calculateCrossProduct( plane_a.normalVector, plane_b.normalVector );
+        const temp_direction = calculateCrossProduct( plane_a.normalVector, intersection_direction );
+        const temp_line = new Line().setPosition( plane_a.position ).setDirection( temp_direction );
+        const intersection_position = calculateIntersectionOfLineAndPlane( temp_line, plane_b ).position;
+        const intersection_line = new Line().setPosition( intersection_position ).setDirection( intersection_direction );
 
-        return { distance: 0, lines: [] };
+        return { distance: 0, lines: [ intersection_line ] };
 
     }
 
     console.warn( "执行错误：该方法发生了意料之外的情况" );
+
+}
+
+/**
+ * 计算并返回直线和直线的交点。
+ * @param { Object } line_a - 直线a，是Line类的实例。
+ * @param { Object } line_b - 直线b，是Line类的实例。
+ * @returns { Object | undefined } - 如果两条直线会相交，那么就会返回交点，交点是Point类的实例。如果两条直线不会相交（异面或平行），那么就会返回undefined。
+ * @example
+ * 
+ */
+export function calculateIntersectionOfLineAndLine ( line_a, line_b ) {
+
+    const relation = calculateRelationBetweenLineAndLine( line_a, line_b );
+
+    // 异面或平行
+    if ( relation === 0 || relation === 1 ) return undefined;
+
+    // 相交
+
+    // TODO
 
 }
 

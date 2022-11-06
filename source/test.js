@@ -60,8 +60,8 @@ console.log(
 // calculateDistanceBetweenPlaneAndPlane
 console.log(
     math.calculateDistanceBetweenPlaneAndPlane(
-        new math.Plane( [ 0, 20, 0 ], [ 0, - 1, 0 ] ),
-        new math.Plane( [ 0, - 2, 0 ], [ 0, 10, 0.00002 ] ),
+        new math.Plane( [ 3, 0, 0 ], [ 1, 0, 0 ] ),
+        new math.Plane( [ 0, 10, 0 ], [ 0, 1, 0 ] ),
     ),
 );
 
