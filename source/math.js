@@ -731,6 +731,32 @@ export function calculateRelationBetweenPointAndLine ( point, line ) {
 }
 
 /**
+ * 计算并返回点和平面之间的空间关系。
+ * @param { Object } point - 点，是Point类的实例。
+ * @param { Object } plane - 平面，是Plane类的实例。
+ * @returns { number } - 若返回0，则代表点不在平面上；若返回1，则代表点在平面上。
+ * @example
+ * const point = new Point( 0, 1, 0 );
+ * const plane = new Plane( [ 0, 0, 0 ], [ 0, 1, 0 ] );
+ * f( point, plane ); // return 0;
+ */
+export function calculateRelationBetweenPointAndPlane ( point, plane ) {
+
+    if ( isPositionEqual( point.position, plane.position ) ) return 1;
+
+    const vector_1 = [ ...plane.position ];
+    const vector_2 = calculateVector( plane.position, point.position );
+
+    const cross_product = calculateCrossProduct( vector_1, vector_2 );
+    const norm = calculateNorm( cross_product );
+
+    if ( isNumberEqual( norm, 0 ) ) return 1;
+
+    return 0;
+
+}
+
+/**
  * 计算并返回直线与直线之间的空间关系。
  * @param { number[] } line_a - 直线a，是Line类的实例。
  * @param { number[] } line_b - 直线b，是Line类的实例。
