@@ -518,13 +518,13 @@ export function calculateAngleBetweenLineAndLine ( line_a, line_b ) {
 
     const relation = calculateRelationBetweenLineAndLine( line_a, line_b );
 
-    // 如果两线异面，则返回undefined
+    /* 如果两线异面，则返回undefined */
     if ( relation === 0 ) return;
 
-    // 如果两线平行但不重合，则返回undefined
+    /* 如果两线平行但不重合，则返回undefined */
     if ( relation === 1 && calculateRelationBetweenPointAndLine( new Point( line_a.position ), line_b ) === 0 ) return;
 
-    // 如果两线重合或相交，则返回两线的夹角
+    /* 如果两线重合或相交，则返回两线的夹角 */
     return calculateAngleBetweenVectorAndVector( line_a.direction, line_b.direction );
 
 }
@@ -535,9 +535,21 @@ export function calculateAngleBetweenLineAndPlane ( line, plane ) {
 
 }
 
+/**
+ * 计算并返回平面和平面之间的夹角，夹角属于[0, π]，夹角的单位为弧度。
+ * @param { Object } plane_a - 平面a，是Plane类的实例。
+ * @param { Object } plane_b - 平面b，是Plane类的实例。
+ * @returns { number | undefined } 若两面平行且不重合，则返回undefined；若两面重合或相交，则返回两面的夹角（当两面重合且法向量的方向相同时，两面的夹角为π，当两面重合且法向量的方向相反时，两面的夹角为0）。
+ */
 export function calculateAngleBetweenPlaneAndPlane ( plane_a, plane_b ) {
 
-    // TODO
+    const relation = calculateRelationBetweenPlaneAndPlane( plane_a, plane_b );
+
+    /* 如果两面平行且补充和，则返回undefined */
+    if ( relation === 1 && calculateRelationBetweenPointAndPlane( new Point( plane_a.position ), plane_b ) === 0 ) return;
+
+    /* 如果两面重合或相交，则返回两面的夹角 */
+    return Math.PI - calculateAngleBetweenVectorAndVector( plane_a.normalVector, plane_b.normalVector );
 
 }
 
@@ -744,13 +756,12 @@ export function calculateRelationBetweenPointAndPlane ( point, plane ) {
 
     if ( isPositionEqual( point.position, plane.position ) ) return 1;
 
-    const vector_1 = [ ...plane.position ];
-    const vector_2 = calculateVector( plane.position, point.position );
+    const vector_1 = calculateVector( plane.position, point.position );
+    const vector_2 = [ ...plane.normalVector ];
 
-    const cross_product = calculateCrossProduct( vector_1, vector_2 );
-    const norm = calculateNorm( cross_product );
+    const scalar_product = calculateScalarProduct( vector_1, vector_2 );
 
-    if ( isNumberEqual( norm, 0 ) ) return 1;
+    if ( isNumberEqual( scalar_product, 0 ) ) return 1;
 
     return 0;
 
