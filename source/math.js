@@ -505,6 +505,43 @@ export function calculateDistanceBetweenPlaneAndPlane ( plane_a, plane_b ) {
 }
 
 /**
+ * 计算并返回直线和直线之间的夹角，夹角属于[0, π]，夹角的单位为弧度。
+ * @param { Object } line_a - 直线a，是Line类的实例。
+ * @param { Object } line_b - 直线b，是Line类的实例。
+ * @returns { number | undefined } 若两线异面，则返回undefined；若两线平行但不重合，则返回undefined；若两线相交或重合，则返回两线的夹角。
+ * @example
+ * const l_1 = new Line( [ 0, 0, 0 ], [ 1, 0, 0 ] );
+ * const l_2 = new Line( [ 0, 0, 0 ], [ - 1, 0, 0 ] );
+ * f( l_1, l_2 ); // return Math.PI
+ */
+export function calculateAngleBetweenLineAndLine ( line_a, line_b ) {
+
+    const relation = calculateRelationBetweenLineAndLine( line_a, line_b );
+
+    // 如果两线异面，则返回undefined
+    if ( relation === 0 ) return;
+
+    // 如果两线平行但不重合，则返回undefined
+    if ( relation === 1 && calculateRelationBetweenPointAndLine( new Point( line_a.position ), line_b ) === 0 ) return;
+
+    // 如果两线重合或相交，则返回两线的夹角
+    return calculateAngleBetweenVectorAndVector( line_a.direction, line_b.direction );
+
+}
+
+export function calculateAngleBetweenLineAndPlane ( line, plane ) {
+
+    // TODO
+
+}
+
+export function calculateAngleBetweenPlaneAndPlane ( plane_a, plane_b ) {
+
+    // TODO
+
+}
+
+/**
  * 计算并返回直线和直线的交点。
  * @param { Object } line_a - 直线a，是Line类的实例。
  * @param { Object } line_b - 直线b，是Line类的实例。
@@ -658,6 +695,38 @@ export function calculateProjectionOfPointOnPlane ( point, plane ) {
     ];
 
     return new Point( projected_position );
+
+}
+
+/**
+ * 计算并返回点和直线之间的空间关系。
+ * @param { Object } point - 点，是Point类的实例。
+ * @param { Line } line - 直线，是Line类的实例。
+ * @returns { number } - 若返回0，则代表点不在直线上；若返回1，则代表点在直线上。
+ * @example
+ * const p_1 = new Point( [ 0, 1, 0 ] );
+ * const p_2 = new Point( [ 0, 0, 0 ] );
+ * const l = new Line( [ 0, 0, 0 ], [ 1, 0, 0 ] );
+ * f( p_1, l ); // return 0
+ * f( p_2, l ); // return 1
+ */
+export function calculateRelationBetweenPointAndLine ( point, line ) {
+
+    let real_ratio;
+
+    point.position.forEach( ( item, index ) => {
+
+        const ratio = ( item - line.position[ index ] ) / line.direction[ index ]
+
+        if ( !Object.is( NaN, ratio ) ) real_ratio = ratio;
+
+    } );
+
+    return +point.position.every( ( item, index ) => {
+
+        return isNumberEqual( item, line.position[ index ] + real_ratio * line.direction[ index ] );
+
+    } );
 
 }
 
