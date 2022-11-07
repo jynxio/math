@@ -80,3 +80,35 @@ console.log(
         new math.Line( [ 3, 0, 0 ], [ 3, 1, 0 ] ),
     ),
 );
+
+// calculateRelationBetweenLineAndLine
+console.log(
+    math.calculateRelationBetweenLineAndLine(
+        new math.Line( [ 0, 0, 0 ], [ 1, 0, 0 ] ),
+        new math.Line( [ - 1, 0, 0 ], [ - 2, 0, 0 ] ),
+    ),
+);
+
+// calculateRelationBetweenPointAndLine
+console.log(
+    math.calculateRelationBetweenPointAndLine(
+        new math.Point( [ 0, 1, 0 ] ),
+        new math.Line( [ 0, 0, 0 ], [ 1, 1, 1 ] ),
+    ),
+);
+
+// calculateAngleBetweenLineAndLine
+console.log(
+    math.calculateAngleBetweenLineAndLine(
+        new math.Line( [ 0, 0, 1 ], [ 1, 0, 1 ] ),
+        new math.Line( [ 0, - 1, 0 ], [ 0, 1, 0 ] ),
+    )
+);
+
+// calculateAngleBetweenPlaneAndPlane
+console.log(
+    math.calculateAngleBetweenPlaneAndPlane(
+        new math.Plane( [ 0, 0, 0 ], [ 0, 1, 0 ] ),
+        new math.Plane( [ 0, 0, 0 ], [ - 1, - 1, 0 ] ),
+    ) / Math.PI * 180
+);

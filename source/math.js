@@ -531,7 +531,7 @@ export function calculateAngleBetweenLineAndLine ( line_a, line_b ) {
 
 export function calculateAngleBetweenLineAndPlane ( line, plane ) {
 
-    // TODO
+    // TODO 我不知道甲方是需要[0, π]还是[0, π/2]值域的夹角，因此该函数的实现暂时搁置。
 
 }
 
